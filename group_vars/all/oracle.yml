@@ -1,0 +1,7 @@
+db_owner: oracle
+db_group: oinstall
+dba_group: dba
+osasm_group: osasm
+
+inventory_location: /u01/app/oraInventory
+oracle_base: /u01/app/oracle

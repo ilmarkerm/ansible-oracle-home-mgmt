@@ -1,0 +1,11 @@
+# generic_groups should contain all hostgroups in Ansible inventory file, that are NOT clusters. For example groups that contain clusters.
+generic_groups:
+ - dev
+ - prod
+ - pt1
+ - dbalab
+ - prodsupport
+
+active_group: "{{ hostvars[inventory_hostname]['group_names'] | difference(generic_groups) | join('') }}"
+clusterhosts: "{{ groups[active_group] | map('regex_replace', '^([a-zA-Z0-9\\-_]+)\\..+$', '\\1') | list }}"
+clusterhosts_fqdn: "{{ groups[active_group] | list }}"
