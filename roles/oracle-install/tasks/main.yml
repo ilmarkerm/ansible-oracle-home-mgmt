@@ -1,0 +1,186 @@
+- debug: var=active_group
+  when: install_lock_granted
+- debug: var=oracle_home
+  when: install_lock_granted
+
+# Check that TNS files exist
+
+- name: Check that sqlnet.ora exists
+  stat:
+    path: "{{ sqlnet_ora }}"
+  register: stat_sqlnet
+  failed_when: not stat_sqlnet.stat.exists
+  tags: postinstall
+  when: link_tns
+
+- name: Check that tnsnames.ora exists
+  stat:
+    path: "{{ tnsnames_ora }}"
+  register: stat_tns
+  failed_when: not stat_tns.stat.exists
+  tags: postinstall
+  when: link_tns
+
+# Install
+
+- set_fact:
+    oracleinstallrsp: /tmp/oracle_install_{{ db_version }}.rsp
+
+- name: Prepare installation template
+  template:
+    src: "{{ db_versions[db_version]['template'] }}"
+    dest: "{{ oracleinstallrsp }}"
+    owner: "{{ db_owner }}"
+    group: "{{ db_group }}"
+    mode: 0660
+  when: install_lock_granted
+
+- name: Install database home
+  shell: "{{ installer_base }}/{{ db_versions[db_version]['installer'] }}/runInstaller -silent -responseFile {{ oracleinstallrsp }} -waitforcompletion -ignorePrereq -ignoreSysPrereqs"
+  args:
+    creates: "{{ oracle_home }}/bin/oracle"
+  when: install_lock_granted
+  register: orainstall
+
+- name: Enable DNFS
+  shell: "cd $ORACLE_HOME/rdbms/lib && make -f ins_rdbms.mk dnfs_on"
+  environment:
+    ORACLE_HOME: "{{ oracle_home }}"
+  when: orainstall.changed and install_lock_granted
+
+- name: Run orainstRoot.sh
+  shell: "{{ inventory_location }}/orainstRoot.sh"
+  args:
+    creates: /etc/oraInst.loc
+  become: yes
+  become_user: root
+  when: install_lock_granted
+
+- name: Run root.sh
+  shell: "{{ oracle_home }}/root.sh"
+  become: yes
+  become_user: root
+  when: orainstall.changed and install_lock_granted
+
+- name: Link sqlnet.ora
+  file:
+    path: "{{ oracle_home }}/network/admin/sqlnet.ora"
+    src: "{{ sqlnet_ora }}"
+    state: link
+  when: link_tns and install_lock_granted
+  tags: postinstall
+
+- name: Link tnsnames.ora
+  file:
+    path: "{{ oracle_home }}/network/admin/tnsnames.ora"
+    src: "{{ tnsnames_ora }}"
+    state: link
+  when: link_tns and install_lock_granted
+  tags: postinstall
+  
+- name: Set patch_oracle to false when DB was not installed
+  set_fact:
+    patch_oracle: False
+  when: not orainstall.changed
+  
+- name: Set patch_oracle to true when DB was installed
+  set_fact:
+    patch_oracle: True
+  when: orainstall.changed
+
+# Patch
+
+- block:
+    - name: Remove old OPatch
+      file:
+        path: "{{ oracle_home }}/OPatch"
+        state: absent
+    - name: Unzip new OPatch
+      unarchive:
+        remote_src: yes
+        src: "{{ patch_base }}/{{ db_versions[db_version]['opatch'] }}"
+        dest: "{{ oracle_home }}"
+        owner: "{{ db_owner }}"
+        group: "{{ db_group }}"
+  when: patch_oracle and install_lock_granted
+
+- name: Run opatchauto for RAC
+  shell: "{{ oracle_home }}/OPatch/opatchauto apply {{ patch_base }}/{{ patchname }} -oh {{ oracle_home }}"
+  become: yes
+  become_user: root
+  when: rac and db_versions[db_version]['autopatch'] is defined and patch_oracle and install_lock_granted
+  with_items: "{{ db_versions[db_version]['autopatch'] }}"
+  loop_control:
+    loop_var: patchname
+
+- block:
+    - name: Get list of all subpatches
+      shell: find {{ patch_base }}/{{ patchname }} -maxdepth 1 -mindepth 1 -type d ! -name automation
+      register: subpatches
+      when: db_versions[db_version]['autopatch'] is defined
+      with_items: "{{ db_versions[db_version]['autopatch'] }}"
+      changed_when: no
+      loop_control:
+        loop_var: patchname
+    - name: Run opatchauto for single instance
+      shell: "$ORACLE_HOME/OPatch/opatch apply -silent"
+      args:
+        chdir: "{{ patchname }}"
+      ignore_errors: yes
+      when: db_versions[db_version]['autopatch'] is defined and subpatches
+      with_items: "{{ subpatches.results|map(attribute='stdout_lines')|list }}"
+      loop_control:
+        loop_var: patchname
+  when: not rac and patch_oracle
+  environment:
+    ORACLE_HOME: "{{ oracle_home }}"
+
+- block:
+    - name: Install one-off patches
+      shell: "{{ oracle_home }}/OPatch/opatch apply -silent"
+      args:
+        chdir: "{{ patch_base }}/{{ patchname }}"
+      when: db_versions[db_version]['oneoff'] is defined and patch_oracle
+      with_items: "{{ db_versions[db_version]['oneoff'] }}"
+      loop_control:
+        loop_var: patchname
+    - name: Rerun root.sh
+      shell: "$ORACLE_HOME/root.sh -silent"
+      become: yes
+      become_user: root
+      when: not rac and patch_oracle
+  when: install_lock_granted
+  environment:
+    ORACLE_HOME: "{{ oracle_home }}"
+
+# Helping scripts
+  ## glogin.sql should only run on the install node, since at this point
+  ## the home only exists on the install node
+- name: glogin.sql (db)
+  lineinfile: dest="{{ oracle_home }}/sqlplus/admin/glogin.sql" line='set sqlprompt "_user @ _connect_identifier:>"' backup=yes
+  when: install_lock_granted
+  tags: 
+    - glogin
+    - postinstall
+
+- name: Add profiles
+  template:
+    src: dotprofile.j2
+    dest: "/home/oracle/.profile_{{ db_version }}"
+    owner: "{{ db_owner }}"
+    mode: "0600"
+    backup: yes
+  tags: 
+    - dotprofile
+    - postinstall
+
+- name: Add .bashrc
+  copy:
+    src: files/bashrc
+    dest: "/home/oracle/.bashrc"
+    owner: "{{ db_owner }}"
+    group: "{{ db_group }}"
+    mode: "0600"
+  tags: 
+    - dotprofile
+    - postinstall

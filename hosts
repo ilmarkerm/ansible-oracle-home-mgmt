@@ -1,0 +1,27 @@
+# Each hostgroup here should be a cluster
+[dev1]
+dev1n1[1:9].example.org
+
+[qa1]
+qa1n1[1:9].example.org
+
+[pt1]
+pt1n1[1:9].example.org
+
+[prod1]
+prod1n1[1:9].example.org
+
+# But can also be just a collection of single hosts
+[dg]
+dg[1:9].example.org
+
+
+# We can also define groups of clusters, but all these groups must be listed in group_vars/all/cluster_membership.yml variable generic_groups
+[non-prod:children]
+dev1
+qa1
+pt1
+
+[production:children]
+prod1
+dg

@@ -1,0 +1,9 @@
+tmp_additional_homes: []
+
+tmp_install_list: "{{ current_rdbms_homes.dev.present + tmp_additional_homes }}"
+tmp_remove_list: "{{ current_rdbms_homes.dev.absent }}"
+
+# This variable is the describes what homes should be installed and deinstalled in this cluster
+installed_rdbms_homes:
+  present: "{{ tmp_install_list|unique }}"
+  absent: "{{ tmp_remove_list|difference(tmp_install_list)|unique }}"

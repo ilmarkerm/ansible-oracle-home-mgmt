@@ -1,0 +1,5 @@
+# Is this group a cluster
+rac: yes
+
+# What node is the master, where the software will be initially installed and patched
+master_host: prod1n11

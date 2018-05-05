@@ -19,6 +19,7 @@ Features of this repository:
 * Oracle Grid infrastructure or Oracle Restart installation is required
 * Fully automated, up to the point that you have a job in Jenkins that is triggered by push to version control system (git)
 * Home description in Ansible variable file also servers as documentation
+* All tasks are idempotent, so you can execute playbook multiple times. If the servers already have the desired state, nothing will be changed
 
 Ideal workflow to install a new home:
 * Describe in Ansible variable file the home name, base installer location and list of patches needed
@@ -26,3 +27,11 @@ Ideal workflow to install a new home:
 * Commit and push to git
 * Go through your typical git workflows to push the change into release branch, create pull requests, have them reviewed by peers, merge pull request into release branch
 * Job in jenkins triggers on push to release branch in git and then executes ansible playbook in target/all hosts
+
+# How to execute
+
+The following will install/deinstall Oracle homes on hostgroup non-prod that contains multiple clusters.
+
+```
+ansible-playbook -e targetgroup=non-prod manage-db-homes.yml
+```

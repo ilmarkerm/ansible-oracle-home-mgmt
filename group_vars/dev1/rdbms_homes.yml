@@ -1,0 +1,10 @@
+tmp_additional_homes:
+- 12201-dwh-001
+
+tmp_install_list: "{{ current_rdbms_homes.dev.present + current_rdbms_homes.dwh.present + tmp_additional_homes }}"
+tmp_remove_list: "{{ current_rdbms_homes.dev.absent + current_rdbms_homes.dwh.absent }}"
+
+# This variable is the describes what homes should be installed and deinstalled in this cluster
+installed_rdbms_homes:
+  present: "{{ tmp_install_list|unique }}"
+  absent: "{{ tmp_remove_list|difference(tmp_install_list)|unique }}"

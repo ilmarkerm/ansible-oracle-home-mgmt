@@ -1,0 +1,128 @@
+sqlnet_ora: "{{ tnsnames_common_path }}/sqlnet.ora"
+tnsnames_ora: "{{ tnsnames_common_path }}/tnsnames.ora"
+
+install_base: "{{ oracle_base }}/product"
+oracle_home: "{{ install_base }}/{{ db_version }}"
+
+db_versions:
+
+ 12102-db-001:
+   deprecated: yes
+   version: 12.1.0.2
+   template: db_install_12102.rsp
+   installer: 12.1.0.2/database
+   opatch: p6880880_122010_Linux-x86-64.zip
+   autopatch:
+     - 2017-10/26635815
+   oneoff:
+     # Duplicate, should be ignored in case of RAC
+     - 2017-10/26713565
+     # OJVM
+     - 2016-10/24433133/24315824
+     - 2017-10/26635845
+
+ 12102-dbbp-001:
+   deprecated: yes
+   version: 12.1.0.2
+   template: db_install_12102.rsp
+   installer: 12.1.0.2/database
+   opatch: p6880880_122010_Linux-x86-64.zip
+   autopatch:
+     - 2017-10/26635880
+   oneoff:
+     # OJVM
+     - 2016-10/24433133/24315824
+     - 2017-10/26635845
+     # 22761995: ORA-7445 [KCBHFIX_TAIL()+31] [SIGSEGV] WHEN RUNNING RMAN RESTORE
+     - 2017-10/22761995
+     # 23003919: LIBRARY CACHE LOCK & CURSOR: PIN S WAIT ON X DUE TO INVALIDATION PARALLEL QUERY
+     - 2017-07/23003919
+     # 24554937: ORA-12850 WHILE MMON SLAVE AUTOMATIC REPORT FLUSH ACTION
+     - 2017-08/24554937
+     # 21785102: OGG:CDB:AC:ORA-600[KPDBSWITCHPRERESTORE: TXN], [0X54D1FA5E8] IN P000
+     # ORA-600 [kpdbswitchprerestore: txn] and Instance Does Not Start (Doc ID 2138379.1)
+     - 2017-10/21785102
+
+ 12102-dwh-001:
+   version: 12.1.0.2
+   template: db_install_12102.rsp
+   installer: 12.1.0.2/database
+   opatch: p6880880_122010_Linux-x86-64.zip
+   autopatch:
+     - 2018-01/27010930
+   oneoff:
+     # OJVM
+     - 2017-10/26635845
+     - 2018-01/27001733
+     # 22761995: ORA-7445 [KCBHFIX_TAIL()+31] [SIGSEGV] WHEN RUNNING RMAN RESTORE
+     - 2017-10/22761995
+     # 23003919: LIBRARY CACHE LOCK & CURSOR: PIN S WAIT ON X DUE TO INVALIDATION PARALLEL QUERY
+     - 2017-07/23003919
+     # 24554937: ORA-12850 WHILE MMON SLAVE AUTOMATIC REPORT FLUSH ACTION
+     - 2017-08/24554937
+     # 21785102: OGG:CDB:AC:ORA-600[KPDBSWITCHPRERESTORE: TXN], [0X54D1FA5E8] IN P000
+     # ORA-600 [kpdbswitchprerestore: txn] and Instance Does Not Start (Doc ID 2138379.1)
+     - 2018-01/21785102
+     # Bug 23589471  ORA-600 [3020] KCOX_FUTURE or ORA-756 Lost Write detected during Recovery of a RMAN backup that used BCT
+     - 2018-01/23589471
+     # 18139621: ORA-932: INCONSISTENT DATATYPES ON MERGE STATEMENT AFTER UPGRADE TO 11.2.0.4
+     - 2017-10/18139621
+     # SR 3-15383699151 : Failing of Auto stats collection job
+     #   19450139: KN:LNX:PERFORMANCE ISSUE WHEN RUNNING GATHER TABLE STATS WITH INCREMENTAL STATS
+     #   20636003: MASSIVE PERFORMANCE DEGRADATION AFTER MIGRATION FROM 11.2 TO 12.1
+     #   23100700: PERFORMANCE ISSUE WITH RECLAIM_SYNOPSIS_SPACE
+     - 2018-01/27323105
+
+ 12201-dwh-001:
+   version: 12.2.0.1
+   template: db_install_12201.rsp
+   installer: 12.2.0.1/database
+   opatch: p6880880_122010_Linux-x86-64_old.zip
+   autopatch:
+     - 2018-01/27100009
+   oneoff:
+     # OJVM
+     - 2018-01/27001739
+
+ 12102-db-002:
+   version: 12.1.0.2
+   template: db_install_12102.rsp
+   installer: 12.1.0.2/database
+   opatch: p6880880_122010_Linux-x86-64_old.zip
+   autopatch:
+     - 2018-04/27468957
+   oneoff:
+     # Duplicate, should be ignored in case of RAC
+     - 2018-04/27338041
+     # OJVM
+     - 2018-01/27001733
+     - 2018-04/27475603
+     # 22819742: ORA-39726 WHEN ADDING COLUMN AFTER TABLE WAS UNCOMPRESSED
+     - 2017-01/22819742
+     # 22761995: ORA-7445 [KCBHFIX_TAIL()+31] [SIGSEGV] WHEN RUNNING RMAN RESTORE
+     - 2018-04/22761995.psu
+     # Rman Backup on 12.1.0.2 Hangs on Enq: TC - Contention (Doc ID 2379088.1)
+     # - 2018-01/27679641
+
+ 12102-dbbp-002:
+   version: 12.1.0.2
+   template: db_install_12102.rsp
+   installer: 12.1.0.2/database
+   opatch: p6880880_122010_Linux-x86-64_old.zip
+   autopatch:
+     - 2018-04/27486326
+   oneoff:
+     # OJVM
+     - 2018-01/27001733
+     - 2018-04/27475603
+     # 22761995: ORA-7445 [KCBHFIX_TAIL()+31] [SIGSEGV] WHEN RUNNING RMAN RESTORE
+     - 2018-04/22761995
+     # 23003919: LIBRARY CACHE LOCK & CURSOR: PIN S WAIT ON X DUE TO INVALIDATION PARALLEL QUERY
+     - 2017-07/23003919
+     # 24554937: ORA-12850 WHILE MMON SLAVE AUTOMATIC REPORT FLUSH ACTION
+     - 2017-08/24554937
+     # 21785102: OGG:CDB:AC:ORA-600[KPDBSWITCHPRERESTORE: TXN], [0X54D1FA5E8] IN P000
+     # ORA-600 [kpdbswitchprerestore: txn] and Instance Does Not Start (Doc ID 2138379.1)
+     - 2018-01/21785102
+     # Bug 23589471  ORA-600 [3020] KCOX_FUTURE or ORA-756 Lost Write detected during Recovery of a RMAN backup that used BCT
+     - 2018-04/23589471

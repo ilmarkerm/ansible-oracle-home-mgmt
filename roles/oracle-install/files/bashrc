@@ -1,0 +1,19 @@
+# .bashrc
+
+# Source global definitions
+if [ -f /etc/bashrc ]; then
+        . /etc/bashrc
+fi
+
+# User specific aliases and functions
+
+alias sqlplus='rlwrap $ORACLE_HOME/bin/sqlplus'
+alias rman='rlwrap $ORACLE_HOME/bin/rman'
+alias adrci='rlwrap $ORACLE_HOME/bin/adrci'
+alias asmcmd='rlwrap asmcmd -p'
+alias dgmgrl='rlwrap $ORACLE_HOME/bin/dgmgrl'
+alias sqlsys='rlwrap $ORACLE_HOME/bin/sqlplus / as sysdba'
+alias dbb='cd $ORACLE_BASE'
+alias dbh='cd $ORACLE_HOME'
+alias dbp='ps ax | grep pmon'
+alias lsinv='$ORACLE_HOME/OPatch/opatch lsinv'
