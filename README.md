@@ -31,13 +31,16 @@ Ideal workflow to install a new home:
 ## How to execute
 
 The following will install/deinstall Oracle homes on hostgroup non-prod that contains multiple clusters.
+This is intended to be run from Jenkins, triggered by push to git release branch.
 
 ```
-ansible-playbook -e targetgroup=non-prod manage-db-homes.yml
+ansible-playbook -e targetgroup=non-prod -u ansible manage-db-homes.yml
 ```
 
 ## Main configuration files
 
-* *roles/oracle-meta/defaults/main.yml* - This file describes the Oracle homes and what they contain
-* *group_vars/all/rdbms_homes.yml* - This file defines "flavours of clusters" and what homes each flavour must have and what homes removed, so each individual cluster can just say give me the "site" package
-* *group_vars/all/installer_location.yml* - Where database installer and patch files are located (and unzipped)
+| Config file | Purpose |
+| --- | --- |
+| roles/oracle-meta/defaults/main.yml | This file describes the Oracle homes and what they contain |
+| group_vars/all/rdbms_homes.yml | This file defines "flavours of clusters" and what homes each flavour must have and what homes removed, so each individual cluster can just say give me the "site" package |
+| group_vars/all/installer_location.yml | Where database installer and patch files are located (and unzipped) |
