@@ -1,0 +1,9 @@
+- name: List cluster hosts
+  debug:
+    var: clusterhosts_fqdn
+  when: install_lock_granted 
+    
+- name: List home has this cluster should have installed and removed
+  debug:
+    var: installed_rdbms_homes
+  when: install_lock_granted and installed_rdbms_homes is defined

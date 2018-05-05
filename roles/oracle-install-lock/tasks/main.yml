@@ -1,0 +1,4 @@
+- name: Check if current host is the master host of the current cluster
+  set_fact:
+    install_lock_granted: yes
+  when: not rac or master_host == ansible_hostname

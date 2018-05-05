@@ -1,7 +1,12 @@
+# OS user and group information user when installing Oracle RDBMS
 db_owner: oracle
 db_group: oinstall
 dba_group: dba
 osasm_group: osasm
 
-inventory_location: /u01/app/oraInventory
 oracle_base: /u01/app/oracle
+inventory_location: /u01/app/oraInventory
+
+# Shared location within a cluster where common sqlnet.ora and tnsnames.ora are located
+tnsnames_common_path: /u02/app/oracle
+

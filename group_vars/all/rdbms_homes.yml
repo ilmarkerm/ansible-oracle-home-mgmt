@@ -1,3 +1,6 @@
+# Just a helper structure what homes should be installed based on cluster function
+# This isn't used directly
+
 current_rdbms_homes:
   dwh:
     present:

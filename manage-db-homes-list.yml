@@ -1,0 +1,8 @@
+#
+# This playbook just list what each cluster should have installed or removed
+#
+
+- name: This playbook just list what each cluster should have installed or removed
+  hosts: "{{ targetgroup }}"
+  roles:
+    - oracle-list-homes

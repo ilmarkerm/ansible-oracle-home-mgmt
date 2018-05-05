@@ -1,0 +1,13 @@
+# Not to be executed directly
+
+- debug:
+    var: db_version
+- include_role: 
+    name: oracle-install
+  when: installaction == "install"
+- include_role: 
+    name: oracle-addnode
+  when: installaction == "install"
+- include_role: 
+    name: oracle-deinstall
+  when: installaction == "deinstall"
