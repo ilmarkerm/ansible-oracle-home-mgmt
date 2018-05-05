@@ -28,10 +28,16 @@ Ideal workflow to install a new home:
 * Go through your typical git workflows to push the change into release branch, create pull requests, have them reviewed by peers, merge pull request into release branch
 * Job in jenkins triggers on push to release branch in git and then executes ansible playbook in target/all hosts
 
-# How to execute
+## How to execute
 
 The following will install/deinstall Oracle homes on hostgroup non-prod that contains multiple clusters.
 
 ```
 ansible-playbook -e targetgroup=non-prod manage-db-homes.yml
 ```
+
+## Main configuration files
+
+* *roles/oracle-meta/defaults/main.yml* - This file describes the Oracle homes and what they contain
+* *group_vars/all/rdbms_homes.yml* - This file defines "flavours of clusters" and what homes each flavour must have and what homes removed, so each individual cluster can just say give me the "site" package
+* *group_vars/all/installer_location.yml* - Where database installer and patch files are located (and unzipped)
