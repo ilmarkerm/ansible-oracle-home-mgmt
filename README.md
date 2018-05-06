@@ -3,7 +3,7 @@
 You shouldn't patch Oracle home that is used to run a database, just install a new one, with the correct patch list and then quickly stop instances running from old home and start instances from the newly installed home.
 This strategy greatly reduces the time needed for Oracle database patching and also gives you a quick and safe way to "roll back", just simply start the instance using old home again.
 
-If you name your database homes in a standard and predictable way, then you will also remove another database home management difficulties - how to know what patches are actually installed in a given home and a possibility that the same home name in different hosts/clusters could have different patches installed! 
+If you name your database homes in a standard and predictable way, then you will also remove another database home management difficulties - how to know what patches are actually installed in a given home and a possibility that the same home name in different hosts/clusters could have different patches installed!
 
 ## How to implement this strategy in a real world?
 
@@ -42,5 +42,85 @@ ansible-playbook -e targetgroup=non-prod -u ansible manage-db-homes.yml
 | Config file | Purpose |
 | --- | --- |
 | roles/oracle-meta/defaults/main.yml | This file describes the Oracle homes and what they contain |
-| group_vars/all/rdbms_homes.yml | This file defines "flavours of clusters" and what homes each flavour must have and what homes removed, so each individual cluster can just say give me the "site" package |
+| group_vars/all/rdbms_homes.yml | This file defines "flavours of clusters" and what homes each flavour must have and what homes removed, so each individual cluster can just say give me the "site" package. This is just a helper, it is not used directly. |
 | group_vars/all/installer_location.yml | Where database installer and patch files are located (and unzipped) |
+| group_vars/cluster_name/cluster.yml | Here you can define, if this cluster is RAC or not. If RAC, then you also need to define the master_host, where the initial installation is actually performed. |
+| group_vars/cluster_name/rdbms_homes.yml | Here you can define a list what homes should be present in the cluster and what homes should be removed. Example refers to the main list defined in group_vars/all/rdbms_homes.yml |
+| hosts | Ansible inventory file, define your clusters/hosts here. Each cluster must be ansible hostgroup and all cluster nodes defined. |
+
+## Shared installation folder
+
+System requires that each host mounts a shared installation folder that contains Oracle database installation media and all the required patch folders. All unzipped.
+Locations are defined in **group_vars/all/installer_location.yml**, all locations under **roles/oracle-meta/defaults/main.yml** are relative to these locations.
+
+For the examples here, the installation folder structure looks like this:
+
+```
+/nfs/install/base_installers/
+├── 11.2.0.4
+│   ├── database
+│   │   ├── install
+│   │   ├── readme.html
+│   │   ├── response
+│   │   ├── rpm
+│   │   ├── runInstaller
+│   │   ├── sshsetup
+│   │   ├── stage
+│   │   └── welcome.html
+├── 12.1.0.2
+│   ├── database
+│   │   ├── install
+│   │   ├── response
+│   │   ├── rpm
+│   │   ├── runInstaller
+│   │   ├── sshsetup
+│   │   ├── stage
+│   │   └── welcome.html
+├── 12.2.0.1
+│   ├── database
+│   │   ├── install
+│   │   ├── response
+│   │   ├── rpm
+│   │   ├── runInstaller
+│   │   ├── sshsetup
+│   │   ├── stage
+│   │   └── welcome.html
+
+/nfs/install/patch/
+├── 2018-04
+│   ├── 22761995
+│   │   ├── etc
+│   │   ├── files
+│   │   ├── online
+│   │   └── README.txt
+│   ├── 22761995.psu
+│   │   ├── etc
+│   │   ├── files
+│   │   ├── online
+│   │   └── README.txt
+│   ├── 23589471
+│   │   ├── etc
+│   │   ├── files
+│   │   └── README.txt
+│   ├── 27338041
+│   │   ├── 19769480
+│   │   ├── 20299023
+│   │   ├── 20831110
+│   │   ├── 21359755
+│   │   ├── 21948354
+│   │   ├── 22291127
+│   │   ├── 23054246
+│   │   ├── 24006101
+│   │   ├── 24732082
+│   │   ├── 25171037
+│   │   ├── 25755742
+│   │   ├── 26609783
+│   │   ├── 26713565
+│   │   ├── 26925311
+│   │   ├── 27338041
+│   │   ├── README.html
+│   │   └── README.txt
+├── p6880880_112000_Linux-x86-64.zip
+├── p6880880_122010_Linux-x86-64_old.zip
+└── p6880880_122010_Linux-x86-64.zip
+```
