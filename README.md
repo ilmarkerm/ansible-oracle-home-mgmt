@@ -3,6 +3,8 @@
 You shouldn't patch Oracle home that is used to run a database, just install a new one, with the correct patch list and then quickly stop instances running from old home and start instances from the newly installed home.
 This strategy greatly reduces the time needed for Oracle database patching and also gives you a quick and safe way to "roll back", just simply start the instance using old home again.
 
+**Never patch existing Oracle home, even when you just need to apply tiny one-off patch. Always install a new home and eventually remove the old one.**
+
 If you name your database homes in a standard and predictable way, then you will also remove another database home management difficulties - how to know what patches are actually installed in a given home and a possibility that the same home name in different hosts/clusters could have different patches installed!
 
 ## How to implement this strategy in a real world?
