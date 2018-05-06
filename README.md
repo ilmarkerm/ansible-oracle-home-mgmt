@@ -16,7 +16,7 @@ Another option, that this repository is using, is just automate database home in
 
 Features of this repository:
 * Oracle home configurations become code
-* Runs over any number of clusters or single hosts, with same configuration
+* Runs over any number of clusters or single hosts, with same configuration in parallel
 * Maintain list of homes or flavours of homes each cluster/single host is having installed or what need to be removed
 * Oracle Grid infrastructure or Oracle Restart installation is required
 * Fully automated, up to the point that you have a job in Jenkins that is triggered by push to version control system (git)
