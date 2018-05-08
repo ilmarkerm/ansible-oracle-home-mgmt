@@ -43,11 +43,18 @@
   become: yes
   become_user: root
 
+- name: oracle-addnode | Check if root.sh needs to be executed
+  stat:
+    path: "{{ oracle_home }}/bin/oradism"
+    get_checksum: no
+    get_mime: no
+  register: oracle_addnode_oradism_stat
+  
 - name: oracle-addnode | Run root.sh
   shell: "{{ oracle_home }}/root.sh"
   become: yes
   become_user: root
-  when: oraaddnode.changed and not oraaddexists.stat.exists
+  when: oracle_addnode_oradism_stat.stat.uid != 0
 
 - name: oracle-addnode | Link sqlnet.ora
   file:
