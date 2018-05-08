@@ -4,5 +4,9 @@
 
 - name: This playbook just list what each cluster should have installed or removed
   hosts: "{{ targetgroup }}"
-  roles:
-    - oracle-list-homes
+  gather_facts: no
+  tasks:
+    - name: List homes this cluster should have installed and removed
+      debug:
+        var: installed_rdbms_homes
+      when: installed_rdbms_homes is defined

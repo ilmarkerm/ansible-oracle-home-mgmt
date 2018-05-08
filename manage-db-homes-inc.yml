@@ -3,11 +3,11 @@
 - debug:
     var: db_version
 - include_role: 
-    name: oracle-install
+    name: ilmarkerm.oracle-install
   when: installaction == "install"
 - include_role: 
-    name: oracle-addnode
+    name: ilmarkerm.oracle-addnode
   when: installaction == "install"
 - include_role: 
-    name: oracle-deinstall
+    name: ilmarkerm.oracle-deinstall
   when: installaction == "deinstall"

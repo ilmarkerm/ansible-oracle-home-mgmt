@@ -1,0 +1,10 @@
+#
+# This playbook removes ORACLE_HOME
+#
+# Examples:
+# ansible-playbook deinstall-db.yml -e oracle_db_version=12102-db-001 -e targetgroup=dev1
+
+- name: Deinstall Oracle home
+  hosts: "{{ targetgroup }}"
+  roles:
+    - ilmarkerm.oracle-deinstall

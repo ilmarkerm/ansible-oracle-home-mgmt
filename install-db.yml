@@ -1,0 +1,13 @@
+#
+# This playbook installs new RAC or single instance Oracle home and patches it with required patches
+#
+# Examples:
+# ansible-playbook install-db.yml -e oracle_db_version=12102-db-001 -e targetgroup=dev1
+
+- name: Install new Oracle database home and patch it
+  hosts: "{{ targetgroup }}"
+  become: yes
+  become_user: "{{ oracle_db_owner }}"
+  roles:
+    - ilmarkerm.oracle-install
+    - ilmarkerm.oracle-addnode

@@ -32,6 +32,12 @@ Ideal workflow to install a new home:
 
 ## How to execute
 
+First install all used roles from Ansible Galaxy.
+
+```
+ansible-galaxy install ilmarkerm.oracle-home-management
+```
+
 The following will install/deinstall Oracle homes on hostgroup non-prod that contains multiple clusters.
 This is intended to be run from Jenkins, triggered by push to git release branch.
 

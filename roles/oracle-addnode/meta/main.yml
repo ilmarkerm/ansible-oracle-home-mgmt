@@ -1,3 +1,0 @@
-dependencies:
-  - { role: oracle-meta }
-  - { role: oracle-install-lock }

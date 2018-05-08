@@ -1,0 +1,4 @@
+# generic_groups should contain all hostgroups in Ansible inventory file, that are NOT clusters. For example groups that contain clusters.
+oracle_meta_generic_groups:
+  - non-prod
+  - production

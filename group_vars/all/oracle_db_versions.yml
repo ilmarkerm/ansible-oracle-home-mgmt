@@ -1,10 +1,4 @@
-sqlnet_ora: "{{ tnsnames_common_path }}/sqlnet.ora"
-tnsnames_ora: "{{ tnsnames_common_path }}/tnsnames.ora"
-
-install_base: "{{ oracle_base }}/product"
-oracle_home: "{{ install_base }}/{{ db_version }}"
-
-db_versions:
+oracle_db_versions:
 
  12102-db-001:
    deprecated: yes
@@ -126,3 +120,4 @@ db_versions:
      - 2018-01/21785102
      # Bug 23589471  ORA-600 [3020] KCOX_FUTURE or ORA-756 Lost Write detected during Recovery of a RMAN backup that used BCT
      - 2018-04/23589471
+

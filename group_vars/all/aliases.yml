@@ -1,0 +1,19 @@
+oracle_install_os_alias:
+  - alias: sqlplus
+    target: rlwrap $ORACLE_HOME/bin/sqlplus
+  - alias: rman
+    target: rlwrap $ORACLE_HOME/bin/rman
+  - alias: adrci
+    target: rlwrap $ORACLE_HOME/bin/adrci
+  - alias: dgmgrl
+    target: rlwrap $ORACLE_HOME/bin/dgmgrl
+  - alias: sqlsys
+    target: rlwrap $ORACLE_HOME/bin/sqlplus / as sysdba
+  - alias: lsinv
+    target: $ORACLE_HOME/OPatch/opatch lsinv
+  - alias: dbb
+    target: cd $ORACLE_BASE
+  - alias: dbh
+    target: cd $ORACLE_HOME
+  - alias: dbp
+    target: ps ax | grep pmon

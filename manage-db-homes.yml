@@ -5,11 +5,11 @@
 - name: This playbook installs and deinstalls Oracle RDBMS homes as configured
   hosts: "{{ targetgroup }}"
   become: yes
-  become_user: "{{ db_owner }}"
+  become_user: "{{ oracle_db_owner }}"
   tasks:
     - include: manage-db-homes-inc.yml
       vars:
-        db_version: "{{ homenameloop }}"
+        oracle_db_version: "{{ homenameloop }}"
         installaction: install
       with_items: "{{ installed_rdbms_homes.present|unique }}"
       loop_control:
@@ -18,7 +18,7 @@
       tags: install
     - include: manage-db-homes-inc.yml
       vars:
-        db_version: "{{ homenameloop }}"
+        oracle_db_version: "{{ homenameloop }}"
         installaction: deinstall
       with_items: "{{ installed_rdbms_homes.absent|difference(installed_rdbms_homes.present)|unique }}"
       loop_control:

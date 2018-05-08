@@ -1,4 +1,4 @@
 # Shared location mounted on all database hosts where database installers and patch files are unzipped
 # all installer and patch locations are relative to these directories
-installer_base: /nfs/install/base_installers
-patch_base: /nfs/install/patch
+oracle_installer_base: /nfs/install/base_installers
+oracle_patch_base: /nfs/install/patch
