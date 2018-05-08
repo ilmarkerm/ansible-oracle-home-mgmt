@@ -1,9 +1,9 @@
 # Each hostgroup here should be a cluster
 [dev1]
-oclab1n0[1:3].swe1.unibet.com
+dev1n1[1:9].example.org
 
 [qa1]
-oclab2n0[1:2].swe1.unibet.com
+qa1n1[1:9].example.org
 
 [pt1]
 pt1n1[1:9].example.org
