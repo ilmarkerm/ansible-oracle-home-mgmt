@@ -2,4 +2,4 @@
 oracle_rac: yes
 
 # What node is the master, where the software will be initially installed and patched
-oracle_rac_master_host: oclab1n01
+oracle_rac_master_host: dev1n11

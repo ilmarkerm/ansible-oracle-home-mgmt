@@ -1,7 +1,7 @@
 # Not to be executed directly
 
 - debug:
-    var: db_version
+    var: oracle_db_version
 - include_role: 
     name: ilmarkerm.oracle-install
   when: installaction == "install"
