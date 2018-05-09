@@ -41,6 +41,8 @@ ansible-galaxy install ilmarkerm.oracle-home-management
 The following will install/deinstall Oracle homes on hostgroup non-prod that contains multiple clusters.
 This is intended to be run from Jenkins, triggered by push to git release branch.
 
+Login user (ansible in this example) must have sudo privileges to database owner (oracle) and root.
+
 ```
 ansible-playbook -e targetgroup=non-prod -u ansible manage-db-homes.yml
 ```
